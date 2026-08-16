@@ -1,0 +1,118 @@
+﻿<Window x:Class="ProjectManager.Dashboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectManager"
+        xmlns:model="clr-namespace:ProjectManager.Model"
+        mc:Ignorable="d"
+        Title="DashBoard" Height="450" Width="800"
+        Background="#1E1E1E"
+        Icon="pack://application:,,,/Assets/PML.ico">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type model:Project}">
+            <Border BorderBrush="White" BorderThickness="1" Margin="10" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}" FontSize="20" Foreground="White" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding Description}" FontSize="16" Foreground="White" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding CreationDate}" Foreground="Gray"/>
+                    <TextBlock Foreground="Gray">
+                        <Run Text="Leader: "/>
+                        <Run Text="{Binding Leader}"/>
+                    </TextBlock>
+                    <Button Content="Open"
+                    Command="{Binding DataContext.OpenProjectPageCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}"
+                    Style="{StaticResource RoundedButton}"
+                    Margin="0,10,0,0"/>
+                    <Button Content="Delete" Command="{Binding DataContext.DeleteProjectCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}"
+                    Style="{StaticResource RoundedButton}"
+                    Margin="0,20,0,0"/>
+                    <TextBlock FontSize="16" Foreground="White" FontStyle="Oblique" FontWeight="Bold">
+                        <Run Text="Progress: "/>
+                        <Run Text="{Binding ProgressPercentage, Mode=OneWay, StringFormat={}{0:F2}%}"/>
+                    </TextBlock>
+                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding ProgressPercentage, Mode=OneWay}" Height="30"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:KanbanScrum}">
+            <Border BorderBrush="White" BorderThickness="1" Margin="10" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}" FontSize="20" Foreground="White" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding Description}" FontSize="16" Foreground="White" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding CreationDate}" Foreground="Gray"/>
+                    <TextBlock Foreground="Gray">
+                        <Run Text="Leader: "/>
+                        <Run Text="{Binding Leader}"/>
+                    </TextBlock>
+                    <Button Content="Open"
+                    Command="{Binding DataContext.OpenScrumKanbanPageCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}"
+                    Style="{StaticResource RoundedButton}"
+                    Margin="0,10,0,0"/>
+                    <Button Content="Delete" Command="{Binding DataContext.DeleteScrumKanbanCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}"
+                    Style="{StaticResource RoundedButton}"
+                    Margin="0,20,0,0"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Project Manager" Grid.Column="0" Grid.Row="0" FontSize="24" Style="{StaticResource UnderlinedText}"/>
+        <Button Content="New Project" Grid.Column="0" Grid.Row="0" Width="150" Height="30" Style="{StaticResource RoundedButton}" Command="{Binding OpenProjectCommand}" Margin="10,57,69,58"/>
+        <Button Content="New Scrum Kanban" Grid.Column="0" Grid.Row="0" Width="150" Height="30" Style="{StaticResource RoundedButton}" Command="{Binding OpenScrumKanbanCommand}" Margin="10,100,69,10"/>
+        <TextBlock Text="Current Project :" Grid.Column="0" Grid.Row="1" FontSize="24" Style="{StaticResource UnderlinedText}"/>
+
+        <Button Content="Save"
+        Command="{Binding SaveDashboardCommand}"
+        Style="{StaticResource RoundedButton}"
+        Grid.Row="0" Grid.Column="5" Margin="0,10,0,90" Height="30"/>
+
+        <Button Content="Load"
+        Command="{Binding LoadDashboardCommand}"
+        Style="{StaticResource RoundedButton}"
+        Grid.Row="0" Grid.Column="5" Margin="0,90,0,10" Height="30"/>
+
+
+        <ScrollViewer Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1" Grid.RowSpan="2"
+              VerticalScrollBarVisibility="Auto">
+
+            <ItemsControl ItemsSource="{Binding DashboardItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Margin" Value="10"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+
+        </ScrollViewer>
+
+
+
+
+    </Grid>
+</Window>

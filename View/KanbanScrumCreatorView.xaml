@@ -1,0 +1,30 @@
+﻿<Window x:Class="ProjectManager.View.KanbanScrumCreatorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectManager.View"
+        mc:Ignorable="d"
+        Title="KanbanScrumCreatorView" Height="450" Width="800" Background="#1E1E1E">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Create a new Kanban : " Style="{StaticResource UnderlinedText}" FontSize="24" Grid.ColumnSpan="2"/>
+        <Label Content="Title : " Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="1" Margin="10,10,10,88" FontSize="20"/>
+        <Label Content="Leader : " Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="1" Margin="10,88,10,10" FontSize="20" RenderTransformOrigin="0.566,0.696"/>
+        <Label Content="Description : " Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="2" FontSize="20"/>
+        <TextBox Text="{Binding KanbanTitle}" Style="{StaticResource ModernTextBox}" Grid.Column="1" Grid.Row="1" Margin="0,10,10,88"/>
+        <TextBox Text="{Binding KanbanLeader}" Style="{StaticResource ModernTextBox}" Grid.Column="1" Grid.Row="1" Margin="0,88,10,10" RenderTransformOrigin="0.566,0.696"/>
+        <TextBox Text="{Binding KanbanDescription}" Style="{StaticResource ModernTextBox}" Grid.Column="1" Grid.Row="2" FontSize="20"/>
+        <Button Content="Create Kanban" Style="{StaticResource RoundedButton}" Grid.Column="1" Grid.Row="3" Margin="0,10,10,10" Command="{Binding CreateKanbanCommand}"/>
+    </Grid>
+</Window>

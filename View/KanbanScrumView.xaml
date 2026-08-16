@@ -1,0 +1,219 @@
+﻿<Window x:Class="ProjectManager.View.KanbanScrumView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ProjectManager.Converters"
+        Title="Scrum Kanban" WindowState="Maximized"
+        Background="#1E1E1E">
+
+    <Window.Resources>
+        <local:ColorNameToBrushConverter x:Key="ColorNameToBrushConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Carte User Story -->
+        <DataTemplate x:Key="StoryCardTemplate">
+            <Border Background="#2A2A2A"
+                    BorderBrush="{Binding USColor, Converter={StaticResource ColorNameToBrushConverter}}"
+                    BorderThickness="2"
+                    CornerRadius="6"
+                    Margin="4"
+                    Padding="8">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="Bold"/>
+
+                    <Button Content="+ Add Task"
+                    Command="{Binding DataContext.CreateTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}"
+                    Margin="0 5 0 0"
+                    Padding="4"
+                    Style="{StaticResource RoundedButton}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <!-- Carte Task -->
+        <DataTemplate x:Key="TaskCardTemplate">
+            <Border Background="#2A2A2A"
+                    BorderBrush="{Binding TaskColor, Converter={StaticResource ColorNameToBrushConverter}}"
+                    BorderThickness="2"
+                    CornerRadius="6"
+                    Margin="4"
+                    Padding="8">
+                <StackPanel>
+                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <Style x:Key="ColumnListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="800"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Padding" Value="0"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <!-- Panneau Epics -->
+            <ColumnDefinition Width="*"/>
+            <!-- Tableau Kanban -->
+        </Grid.ColumnDefinitions>
+
+        <!-- PANNEAU EPICS (Méthode Jira) -->
+        <StackPanel Grid.Column="0" Grid.Row="0" Background="#2A2A2A">
+            <TextBlock Text="Epics" Foreground="White" FontSize="20" Margin="0 0 0 10"/>
+
+            <Button Content="Add Epic"
+            Margin="0 0 0 10"
+            Padding="5"
+            Command="{Binding CreateEpicCommand}"
+            Style="{StaticResource RoundedButton}"/>
+
+            <ListBox ItemsSource="{Binding CurrentKanban.Epics}"
+             SelectedItem="{Binding SelectedEpic}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0 0 0 10">
+
+                            <!-- Nom de l’Epic -->
+                            <TextBlock Text="{Binding Title}" 
+                               Foreground="Black" 
+                               FontSize="16"/>
+
+                            <!-- Bouton Add US -->
+                            <Button Content="+ Add User Story"
+                            Command="{Binding DataContext.CreateUserStoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            CommandParameter="{Binding}"
+                            Margin="0 5 0 0"
+                            Padding="4"
+                            Style="{StaticResource RoundedButton}"/>
+
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- TABLEAU KANBAN -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <TextBlock Text="{Binding CurrentKanban.Name}"
+                           Grid.Row="0"
+                           Grid.ColumnSpan="7"
+                           FontSize="28"
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+
+                <!-- PRODUCT LOG (US) -->
+                <StackPanel Grid.Column="0" Grid.Row="1">
+                    <TextBlock Text="Product Log" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding ProductLog}"
+                             ItemTemplate="{StaticResource StoryCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="ProductLog_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Story_Drag"/>
+                </StackPanel>
+
+                <!-- BACKLOG (US) -->
+                <StackPanel Grid.Column="1" Grid.Row="1">
+                    <TextBlock Text="Backlog" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding Backlog}"
+                             ItemTemplate="{StaticResource StoryCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="Backlog_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Story_Drag"/>
+                </StackPanel>
+
+                <!-- EMBARQUÉE (US) -->
+                <StackPanel Grid.Column="2" Grid.Row="1">
+                    <TextBlock Text="Embarquée" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding Embarquee}"
+                             ItemTemplate="{StaticResource StoryCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="Embarquee_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Story_Drag"/>
+                </StackPanel>
+
+                <!-- A FAIRE (Tasks) -->
+                <StackPanel Grid.Column="3" Grid.Row="1">
+                    <TextBlock Text="À faire" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding Afaire}"
+                             ItemTemplate="{StaticResource TaskCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="Afaire_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Task_Drag"/>
+                </StackPanel>
+
+                <!-- EN COURS (Tasks) -->
+                <StackPanel Grid.Column="4" Grid.Row="1">
+                    <TextBlock Text="En cours" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding EnCours}"
+                             ItemTemplate="{StaticResource TaskCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="EnCours_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Task_Drag"/>
+                </StackPanel>
+
+                <!-- TERMINÉE (Tasks) -->
+                <StackPanel Grid.Column="5" Grid.Row="1">
+                    <TextBlock Text="Terminée" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding Termine}"
+                             ItemTemplate="{StaticResource TaskCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="Termine_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Task_Drag"/>
+                </StackPanel>
+
+                <!-- A VALIDER (US) -->
+                <StackPanel Grid.Column="6" Grid.Row="1">
+                    <TextBlock Text="À valider" Foreground="White" FontSize="20"/>
+                    <ListBox ItemsSource="{Binding AValider}"
+                             ItemTemplate="{StaticResource StoryCardTemplate}"
+                             Style="{StaticResource ColumnListBoxStyle}"
+                             AllowDrop="True"
+                             Drop="AValider_Drop"
+                             DragOver="Kanban_DragOver"
+                             PreviewMouseLeftButtonDown="Story_Drag"/>
+                </StackPanel>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

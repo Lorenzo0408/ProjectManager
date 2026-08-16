@@ -1,0 +1,133 @@
+﻿<Application x:Class="ProjectManager.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ProjectManager"
+             xmlns:locale="clr-namespace:ProjectManager.Converters"
+             StartupUri="View/Dashboard.xaml">
+
+    <Application.Resources>
+        <locale:ColorToForegroundConverter x:Key="ColorToForegroundConverter"/>
+        <Style x:Key="RoundedButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="UnderlinedText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontStyle" Value="Oblique"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextDecorations" Value="Underline"/>
+        </Style>
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontStyle" Value="Oblique"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#555"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="BorderThickness" Value="0 0 0 2"/>
+            <Setter Property="BorderBrush" Value="#555"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="Margin" Value="0 4 0 10"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="0">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="DarkViolet"/>
+                                <Setter TargetName="Border" Property="BorderThickness" Value="0 0 0 3"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#333"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#444"/>
+                                <Setter Property="Foreground" Value="#777"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TaskButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+            <Setter Property="Background" Value="{Binding TaskColor}"/>
+            <Setter Property="Foreground" Value="{Binding TaskColor, Converter={StaticResource ColorToForegroundConverter}}"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompletedTask}" Value="True">
+                    <Setter Property="Background" Value="Green"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsCompletedTask}" Value="False">
+                    <Setter Property="Background" Value="{Binding TaskColor}"/>
+                    <Setter Property="Foreground" Value="{Binding TaskColor, Converter={StaticResource ColorToForegroundConverter}}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="USButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+            <Setter Property="Background" Value="{Binding USColor}"/>
+            <Setter Property="Foreground" Value="{Binding USColor, Converter={StaticResource ColorToForegroundConverter}}"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompletedUS}" Value="True">
+                    <Setter Property="Background" Value="Green"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsCompletedUS}" Value="False">
+                    <Setter Property="Background" Value="{Binding USColor}"/>
+                    <Setter Property="Foreground" Value="{Binding USColor, Converter={StaticResource ColorToForegroundConverter}}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="EpicButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+            <!-- Couleur par défaut -->
+            <Setter Property="Background" Value="{Binding EpicColor}"/>
+            <Setter Property="Foreground" Value="{Binding EpicColor, Converter={StaticResource ColorToForegroundConverter}}"/>
+
+            <Style.Triggers>
+
+                <!-- Si l'épic est complétée -->
+                <DataTrigger Binding="{Binding IsCompletedEpic}" Value="True">
+                    <Setter Property="Background" Value="Green"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+
+                <!-- Si l'épic n'est PAS complétée -->
+                <DataTrigger Binding="{Binding IsCompletedEpic}" Value="False">
+                    <Setter Property="Background" Value="{Binding EpicColor}"/>
+                    <Setter Property="Foreground" Value="{Binding EpicColor, Converter={StaticResource ColorToForegroundConverter}}"/>
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+    </Application.Resources>
+</Application>

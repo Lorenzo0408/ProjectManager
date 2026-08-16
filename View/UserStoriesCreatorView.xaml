@@ -1,0 +1,41 @@
+﻿<Window x:Class="ProjectManager.View.UserStoriesCreatorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectManager.View"
+        mc:Ignorable="d"
+        Title="UserStoriesCreatorView" Height="450" Width="800"
+        Background="#1E1E1E"
+        Icon="pack://application:,,,/Assets/PML.ico">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.2*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="0.3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.3*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Create a new User Story :" Grid.Column="0" Grid.Row="0" FontSize="24" Style="{StaticResource UnderlinedText}"/>
+        <Label Content="Title of the User Story : " Grid.Column="0" Grid.Row="1" Margin="0, 35" FontSize="18" Style="{StaticResource LabelStyle}"/>
+        <Label Content="Description of the User Story :" Grid.Column="0" Grid.Row="2" FontSize="18" Margin="0,10,10,150" Style="{StaticResource LabelStyle}"/>
+        <TextBox Text="{Binding UserStoryTitle}" Grid.Column="1" Grid.Row="1" Margin="0, 30, 50, 30" Style="{StaticResource ModernTextBox}"/>
+        <TextBox Text="{Binding UserStoryDescription}" Grid.Column="1" Grid.Row="2" Margin="0,10,133,30" Style="{StaticResource ModernTextBox}" Grid.ColumnSpan="2" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+        <Label Content="Choose a color : " Grid.Row="2" Grid.Column="0" FontSize="18" Style="{StaticResource LabelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,51"/>
+        <ComboBox Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,24" RenderTransformOrigin="2.684,0.489" ItemsSource="{Binding AvailableColors}" SelectedItem="{Binding SelectedColor}" Width="150">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="16" Height="16" Fill="{Binding}" Margin="0,0,5,0"/>
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Grid.Column="1" Grid.Row="3" Style="{StaticResource RoundedButton}" Content="Create" Margin="100, 15" Command="{Binding CreateUserStoryCommand}"/>
+    </Grid>
+</Window>
